@@ -122,7 +122,7 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
 
       <div className="home-body">
         <Emblem />
-        <h1 className="brand">실시간 강의 통역</h1>
+        <h1 className="brand">My Translation Buddy</h1>
         <p className="brand-sub">
           {role === 'student'
             ? '입장 코드로 들어가 원하는 언어로 자막을 받으세요.'
