@@ -27,22 +27,12 @@ export function hasApiKey(): boolean {
 // 아무나 방을 만들지 못하게 막는 클라이언트 측 잠금.
 // (참고: 클라이언트 측 잠금이라 번들을 뜯어보면 비밀번호가 노출됨 — 캐주얼 차단용.
 //  진짜 보안은 방 비밀번호 + Supabase RLS가 담당한다.)
-// VITE_INSTRUCTOR_PASSCODE로 바꿀 수 있고, 없으면 기본값을 쓴다.
-const INSTRUCTOR_FLAG = 'ltx.instructor'
-const INSTRUCTOR_PASSCODE = (import.meta.env.VITE_INSTRUCTOR_PASSCODE ?? '96609660').trim()
+// 세션당 잠금 해제 — 기억하지 않음. 앱을 새로 열 때마다 항상 잠긴 상태로 시작한다.
+const INSTRUCTOR_PASSCODE = '19220'
 const PERSONAL_PASSCODE = (import.meta.env.VITE_PERSONAL_PASSCODE ?? '0426309660').trim()
 
-export function isInstructorUnlocked(): boolean {
-  try { return localStorage.getItem(INSTRUCTOR_FLAG) === '1' } catch { return false }
-}
 // 맞으면 시작 모드 반환('lecture'|'personal'), 틀리면 null. 두 비번 모두 교수자 잠금 해제.
 export function unlockInstructor(passcode: string): 'lecture' | 'personal' | null {
   const p = passcode.trim()
-  const mode = p === INSTRUCTOR_PASSCODE ? 'lecture' : p === PERSONAL_PASSCODE ? 'personal' : null
-  if (!mode) return null
-  try { localStorage.setItem(INSTRUCTOR_FLAG, '1') } catch { /* noop */ }
-  return mode
-}
-export function lockInstructor(): void {
-  try { localStorage.removeItem(INSTRUCTOR_FLAG) } catch { /* noop */ }
+  return p === INSTRUCTOR_PASSCODE ? 'lecture' : p === PERSONAL_PASSCODE ? 'personal' : null
 }

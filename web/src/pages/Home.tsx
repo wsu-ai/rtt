@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { DEFAULT_OUTPUT_LANGUAGE, hasApiKey, isInstructorUnlocked, unlockInstructor, lockInstructor, getStoredApiKey, setStoredApiKey, hasStoredApiKey } from '../lib/settings'
+import { DEFAULT_OUTPUT_LANGUAGE, hasApiKey, unlockInstructor, getStoredApiKey, setStoredApiKey, hasStoredApiKey } from '../lib/settings'
 import { LANGUAGES } from '../lib/languages'
+import { UI_LANGUAGES, UI_DICTS, getStoredUiLang, setStoredUiLang, type UiLang } from '../lib/uiLang'
 import { hasSupabase } from '../lib/supabase'
 import { createRoom, verifyRoom } from '../lib/room'
 import type { StudentSession, InstructorSession } from '../App'
@@ -20,7 +21,11 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
   onJoinStudent: (s: StudentSession) => void
   onCreateInstructor: (s: InstructorSession) => void
 }) {
-  const [role, setRole] = useState<'student' | 'instructor'>(isInstructorUnlocked() ? 'instructor' : 'student')
+  const [uiLang, setUiLang] = useState<UiLang>(getStoredUiLang())
+  const t = UI_DICTS[uiLang]
+  function changeUiLang(lang: UiLang) { setUiLang(lang); setStoredUiLang(lang) }
+
+  const [role, setRole] = useState<'student' | 'instructor'>('student')
   // 학생
   const [code, setCode] = useState('')
   const [password, setPassword] = useState('')
@@ -30,7 +35,7 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
   const [iCode, setICode] = useState('')
   const [iPassword, setIPassword] = useState('')
   // 교수자 잠금
-  const [unlocked, setUnlocked] = useState(isInstructorUnlocked())
+  const [unlocked, setUnlocked] = useState(false)
   const [lockOpen, setLockOpen] = useState(false)
   const [passcode, setPasscode] = useState('')
   const [lockErr, setLockErr] = useState('')
@@ -57,13 +62,14 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
 
   function toggleLock() {
     if (unlocked) {
-      lockInstructor(); setUnlocked(false); setErr('')
+      setUnlocked(false); setErr('')
       if (role === 'instructor') setRole('student')
     } else {
       setPasscode(''); setLockErr(''); setLockOpen(true)
     }
   }
   function submitPasscode() {
+    if (!passcode.trim()) { setLockOpen(false); setLockErr(''); return }
     const mode = unlockInstructor(passcode)
     if (!mode) { setLockErr('비밀번호가 올바르지 않습니다.'); return }
     setUnlocked(true); setLockOpen(false); setPasscode(''); setLockErr(''); setErr('')
@@ -108,99 +114,107 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
           <button
             className={'gear lock' + (hasStoredApiKey() ? ' on' : '')}
             onClick={openKey}
-            aria-label="Gemini API 키"
-            title={hasStoredApiKey() ? 'Gemini 키 — 내 키 사용 중' : 'Gemini 키 — 기본 키 사용 중'}
+            aria-label={t.keyBtnAriaMine}
+            title={hasStoredApiKey() ? t.keyBtnTitleMine : t.keyBtnTitleDefault}
           >🔑</button>
         )}
         <button
           className={'gear lock' + (unlocked ? ' on' : '')}
           onClick={toggleLock}
-          aria-label={unlocked ? '교수자 모드 — 누르면 잠금' : '교수자 비밀번호 입력'}
-          title={unlocked ? '교수자 모드 켜짐 — 누르면 잠금' : '교수자 비밀번호'}
+          aria-label={unlocked ? t.lockBtnAriaOn : t.lockBtnAriaOff}
+          title={unlocked ? t.lockBtnTitleOn : t.lockBtnTitleOff}
         >{unlocked ? '🔓' : '🔒'}</button>
       </header>
 
       <div className="home-body">
         <Emblem />
+        <div className="ui-lang-picker">
+          <select
+            className="lang-select"
+            aria-label={t.languageSelectLabel}
+            value={uiLang}
+            onChange={(e) => changeUiLang(e.target.value as UiLang)}
+          >
+            {UI_LANGUAGES.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
+          </select>
+        </div>
         <h1 className="brand">My Translation Buddy</h1>
         <p className="brand-sub">
-          {role === 'student'
-            ? '입장 코드로 들어가 원하는 언어로 자막을 받으세요.'
-            : '강의 방을 만들고 학생에게 코드를 공유하세요.'}
+          {role === 'student' ? t.subStudent : t.subInstructor}
         </p>
 
         <div className="role-seg">
-          <button className={role === 'student' ? 'on' : ''} onClick={() => { setRole('student'); setErr('') }}>강의 입장</button>
+          <button className={role === 'student' ? 'on' : ''} onClick={() => { setRole('student'); setErr('') }}>{t.roleStudent}</button>
           <button
             className={role === 'instructor' ? 'on' : ''}
             disabled={!unlocked}
             onClick={pickInstructor}
-            title={unlocked ? '' : '교수자 전용 — 우측 상단 자물쇠로 잠금 해제'}
-          >강의 개설{!unlocked && ' 🔒'}</button>
+            title={unlocked ? '' : t.roleInstructorLockedTitle}
+          >{t.roleInstructor}{!unlocked && ' 🔒'}</button>
         </div>
 
         {role === 'student' ? (
           <>
             <label className="field">
-              <span>입장 코드</span>
-              <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="예: 4821" inputMode="numeric" />
+              <span>{t.fieldCode}</span>
+              <input value={code} onChange={(e) => setCode(e.target.value)} placeholder={t.codePlaceholder} inputMode="numeric" />
             </label>
             <label className="field">
-              <span>비밀번호</span>
-              <input type="password" inputMode="numeric" pattern="[0-9]*" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="강의 비밀번호" autoComplete="off" />
+              <span>{t.fieldPassword}</span>
+              <input type="password" inputMode="numeric" pattern="[0-9]*" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t.studentPasswordPlaceholder} autoComplete="off" />
             </label>
             <label className="field">
-              <span>출력 언어</span>
+              <span>{t.fieldOutputLang}</span>
               <select value={language} onChange={(e) => setLanguage(e.target.value)}>
                 {LANGUAGES.map((l) => <option key={l.code} value={l.label}>{l.label}</option>)}
               </select>
             </label>
-            <button className="primary" disabled={!studentValid || busy} onClick={joinStudent}>{busy ? '확인 중…' : '입장'}</button>
+            <button className="primary" disabled={!studentValid || busy} onClick={joinStudent}>{busy ? t.joining : t.join}</button>
           </>
         ) : (
           <>
             <label className="field">
-              <span>강의명</span>
-              <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="예: 한국 문화의 이해" />
+              <span>{t.fieldTitle}</span>
+              <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t.titlePlaceholder} />
             </label>
             <label className="field">
-              <span>방 코드</span>
-              <input value={iCode} onChange={(e) => setICode(e.target.value)} placeholder="예: 4821" inputMode="numeric" />
+              <span>{t.fieldRoomCode}</span>
+              <input value={iCode} onChange={(e) => setICode(e.target.value)} placeholder={t.roomCodePlaceholder} inputMode="numeric" />
             </label>
             <label className="field">
-              <span>비밀번호</span>
-              <input type="password" inputMode="numeric" pattern="[0-9]*" value={iPassword} onChange={(e) => setIPassword(e.target.value)} placeholder="방 비밀번호" autoComplete="off" />
+              <span>{t.fieldPassword}</span>
+              <input type="password" inputMode="numeric" pattern="[0-9]*" value={iPassword} onChange={(e) => setIPassword(e.target.value)} placeholder={t.instructorPasswordPlaceholder} autoComplete="off" />
             </label>
-            <button className="primary" disabled={!instructorValid || busy} onClick={createInstructor}>{busy ? '개설 중…' : '개설'}</button>
+            <button className="primary" disabled={!instructorValid || busy} onClick={createInstructor}>{busy ? t.creating : t.create}</button>
           </>
         )}
 
         {err && <p className="hint" style={{ color: 'var(--live)' }}>{err}</p>}
         {role === 'instructor' && !hasApiKey() && (
-          <p className="hint">⚠ 서버에 Gemini 키가 설정되어 있지 않습니다. 관리자에게 문의하세요.</p>
+          <p className="hint">{t.hintNoGeminiKey}</p>
         )}
         {!sbReady && (
-          <p className="hint">⚠ 서버(Supabase) 설정이 아직 없습니다. <code>.env.local</code>에 URL/anon 키를 넣어주세요.</p>
+          <p className="hint">{t.hintNoSupabasePre}<code>.env.local</code>{t.hintNoSupabasePost}</p>
         )}
 
-        <div className="home-footer">WSU Live Translation</div>
+        <div className="home-footer">{t.footer}</div>
       </div>
 
       {lockOpen && (
         <div className="modal-backdrop" onClick={() => setLockOpen(false)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">🔒 교수자 비밀번호</h2>
-            <p className="modal-desc">교수자만 강의를 개설할 수 있습니다.</p>
+            <h2 className="modal-title">{t.lockTitle}</h2>
+            <p className="modal-desc">{t.lockDesc}</p>
             <input
               type="password" inputMode="numeric" pattern="[0-9]*" autoFocus
               value={passcode} onChange={(e) => { setPasscode(e.target.value); setLockErr('') }}
-              placeholder="비밀번호" autoComplete="off"
+              placeholder={t.passcodePlaceholder} autoComplete="off"
               onKeyDown={(e) => { if (e.key === 'Enter') submitPasscode() }}
             />
             {lockErr && <p className="modal-err">{lockErr}</p>}
             <div className="modal-actions">
-              <button className="ghost" onClick={() => setLockOpen(false)}>취소</button>
-              <button className="primary modal-ok" disabled={!passcode.trim()} onClick={submitPasscode}>확인</button>
+              <button className="ghost" onClick={() => setLockOpen(false)}>{t.cancel}</button>
+              <button className="primary modal-ok" disabled={!passcode.trim()} onClick={submitPasscode}>{t.confirm}</button>
             </div>
           </div>
         </div>
@@ -209,16 +223,16 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
       {keyOpen && (
         <div className="modal-backdrop" onClick={() => setKeyOpen(false)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">🔑 Gemini API 키</h2>
-            <p className="modal-desc">안정적 운영을 위해 본인 키를 넣을 수 있어요. 비우면 기본 키를 씁니다. <b>이 브라우저에만</b> 저장됩니다.</p>
+            <h2 className="modal-title">{t.keyTitle}</h2>
+            <p className="modal-desc">{t.keyDescPre}<b>{t.keyDescBold}</b>{t.keyDescPost}</p>
             <div className="key-row">
-              <input type={keyShow ? 'text' : 'password'} value={keyInput} onChange={(e) => setKeyInput(e.target.value)} placeholder="AIza…" autoComplete="off" spellCheck={false} />
-              <button className="ghost" onClick={() => setKeyShow((s) => !s)}>{keyShow ? '숨기기' : '보기'}</button>
+              <input type={keyShow ? 'text' : 'password'} value={keyInput} onChange={(e) => setKeyInput(e.target.value)} placeholder={t.keyPlaceholder} autoComplete="off" spellCheck={false} />
+              <button className="ghost" onClick={() => setKeyShow((s) => !s)}>{keyShow ? t.hide : t.show}</button>
             </div>
-            <p className="modal-desc" style={{ marginTop: 8 }}>현재: <b>{hasStoredApiKey() ? '내 키' : '기본 키'}</b> 사용 중</p>
+            <p className="modal-desc" style={{ marginTop: 8 }}>{t.keyCurrentPre}<b>{hasStoredApiKey() ? t.keyCurrentMine : t.keyCurrentDefault}</b>{t.keyCurrentPost}</p>
             <div className="modal-actions">
-              <button className="ghost" onClick={resetKey}>기본값</button>
-              <button className="primary modal-ok" onClick={saveKey}>저장</button>
+              <button className="ghost" onClick={resetKey}>{t.resetDefault}</button>
+              <button className="primary modal-ok" onClick={saveKey}>{t.save}</button>
             </div>
           </div>
         </div>
