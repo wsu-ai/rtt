@@ -1,0 +1,196 @@
+:root{
+  --ink:#2C2C2A; --gray:#5F5E5A; --faint:#A9A89F;
+  --teal:#085041; --teal2:#0F6E56; --tealbg:#F2FBF8; --tealb:#9FE1CB;
+  --panel:#F7F6F1; --panel2:#F1EFE8; --border:#E2E0D8;
+  --live:#C8453B; --backdrop:#E7E4DB; --screen-bg:#EAF4EE;
+  --font:-apple-system,"Segoe UI","Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body,#root{height:100%}
+body{margin:0;font-family:var(--font);color:var(--ink)}
+button{touch-action:manipulation}
+
+.app{min-height:100dvh;display:flex;align-items:center;justify-content:center;background:var(--backdrop)}
+.screen{position:relative;width:100%;max-width:420px;height:100dvh;display:flex;flex-direction:column;background:var(--screen-bg);overflow:hidden}
+@media(min-width:460px){
+  .app{padding:24px}
+  .screen{height:min(880px,94dvh);border-radius:34px;box-shadow:0 20px 55px rgba(40,38,30,.22);border:1px solid #d7d4ca;background:#fff}
+}
+
+.top{flex:none;position:relative;padding:14px 16px 12px;border-bottom:1px solid var(--border);background:#fff}
+.gear-btn{font-size:20px;line-height:1;color:var(--gray);background:none;border:none;padding:0 2px 0 8px;cursor:pointer;font-family:var(--font)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.seg button{border:none;background:#fff;font-size:13px;padding:7px 12px;cursor:pointer;color:var(--gray);font-family:var(--font)}
+.seg button.on{background:var(--tealbg);color:var(--teal)}
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:92px;z-index:30;background:#2C2C2A;color:#fff;font-size:13px;padding:9px 16px;border-radius:999px}
+.top .r1{display:flex;align-items:center;gap:10px}
+.title{flex:1;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back{font-size:26px;line-height:1;color:var(--gray);background:none;border:none;padding:0 4px;cursor:pointer;font-family:var(--font)}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--live)}
+.live-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--live);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.ctrls{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:0 13px;border-radius:999px;border:1px solid var(--border);background:var(--panel);font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;font-family:var(--font)}
+.chip.on{background:var(--tealbg);border-color:var(--tealb);color:var(--teal)}
+.cap-toggle{width:90px;justify-content:center}
+.voice-soon{color:var(--faint);cursor:help}
+.caret{display:inline-block;width:2px;height:1em;background:var(--teal2);vertical-align:-2px;margin-left:2px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+.act{flex:none;display:flex;align-items:center;gap:10px;padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--border);background:#fff}
+.ask{flex:1;height:50px;border:none;border-radius:14px;background:var(--teal);color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.ibtn{width:50px;height:50px;border:1px solid var(--border);border-radius:14px;background:var(--panel);font-size:17px;color:var(--ink);cursor:pointer;font-family:var(--font)}
+.act .save{width:auto;min-width:60px;padding:0 16px;font-size:14px;font-weight:500}
+
+.home-top{flex:none;display:flex;justify-content:flex-end;gap:6px;padding:12px 14px}
+.gear{font-size:22px;background:none;border:none;color:var(--gray);cursor:pointer}
+.home-body{flex:1;overflow-y:auto;padding:8px 22px 28px;display:flex;flex-direction:column}
+.home-body>*{flex-shrink:0} /* 폰에서 높이 부족 시 flex 자식이 눌려 글자 잘리는 것 방지(iOS) */
+.brand{font-size:26px;font-weight:700;margin:12px 0 6px}
+.brand-sub{font-size:14px;color:var(--gray);margin:0 0 26px;line-height:1.5}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.field>span{font-size:13px;font-weight:500;color:var(--gray)}
+.field .sub{font-weight:400;color:var(--faint)}
+input,select{height:48px;border:1px solid var(--border);border-radius:12px;padding:0 14px;font-size:16px;font-family:var(--font);color:var(--ink);background:#fff;width:100%}
+input:focus,select:focus{outline:none;border-color:var(--teal2);box-shadow:0 0 0 3px rgba(15,110,86,.12)}
+.primary{height:52px;border:none;border-radius:14px;background:var(--teal);color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:8px}
+.primary:disabled{opacity:.45;cursor:default}
+.hint{font-size:13px;color:var(--gray);margin-top:16px;line-height:1.6}
+.hint a{color:var(--teal2)}
+.linklike{background:none;border:none;color:var(--teal2);font-size:13px;text-decoration:underline;cursor:pointer;padding:0;font-family:var(--font)}
+.key-row{display:flex;gap:8px}
+.key-row input{flex:1}
+.key-row .ghost{min-width:66px;padding:0 8px;text-align:center}
+.ghost{height:48px;padding:0 14px;border:1px solid var(--border);border-radius:12px;background:var(--panel);font-size:13px;color:var(--ink);cursor:pointer;white-space:nowrap;font-family:var(--font)}
+
+.live-badge.off{color:var(--faint)}
+.live-badge.off .dot{background:var(--faint);animation:none}
+.placeholder{margin:auto;text-align:center;padding:24px;max-width:300px}
+.ph-title{font-size:17px;font-weight:600;margin:0 0 10px}
+.ph-desc{font-size:13px;color:var(--gray);line-height:1.6;margin:0 0 16px}
+.ph-warn{font-size:13px;color:var(--live);font-weight:600;margin:0 0 12px}
+.placeholder .primary{width:100%}
+.ask.stop{background:#fff;color:var(--live);border:1px solid var(--live)}
+
+/* entry: emblem + footer */
+.emblem{display:block;width:170px;max-width:62%;height:auto;margin:6px auto 22px}
+.home-footer{margin-top:auto;padding-top:28px;text-align:center;font-size:13px;font-weight:500;letter-spacing:1px;color:var(--gray)}
+
+/* live: language select + 모드/뷰 토글 */
+.lang-select{height:38px;border-radius:999px;border:1px solid var(--border);background:var(--panel);color:var(--ink);font-size:13px;font-weight:500;padding:0 8px;font-family:var(--font);max-width:80px;cursor:pointer}
+.lang-select:disabled,.chip:disabled{opacity:.45;cursor:not-allowed}
+.mode-seg{display:inline-flex}
+.mode-seg button{font-size:13px;padding:7px 11px;min-height:38px}
+.mode-seg .on{background:var(--teal);color:#fff}
+.view-toggle{min-width:76px;justify-content:center;padding:0 10px}
+
+/* ── 반응형: 큰 화면에서 자막 넓게 + 가로(landscape)에서 원문|번역 좌·우 분할 ── */
+/* 자막(live) 화면만 넓힘 — 입장/개설 폼은 좁게 유지 */
+@media (min-width:700px){ .screen.live{max-width:760px} }
+@media (min-width:1100px){ .screen.live{max-width:920px} }
+/* 짧은 화면(폰 가로 등): 카드 여백·테두리 빼고 꽉 차게 써서 높이 확보 */
+@media (min-width:460px) and (max-height:560px){
+  .app{padding:0}
+  .screen{height:100dvh;border-radius:0;border:none;box-shadow:none}
+}
+/* 가로 방향이면 원문/번역을 위·아래 → 좌·우로(가로폭 활용) */
+@media (orientation:landscape){
+  .stage:not(.status-stage){flex-direction:row}
+  .src-pane{flex:1;border-bottom:none;border-right:1px solid var(--border)}
+  .trans-pane{flex:1.4}
+  /* 학생 보기: 가로에서 현황 왼쪽(≈⅓) + 질문 오른쪽(≈⅔), 각자 스크롤 */
+  .stu-summary{flex:0 0 34%;align-self:flex-start}
+  .q-feed{flex:1}
+}
+
+/* live: caption stage + 원문/번역 2분할 */
+.stage{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.scroll{overflow-y:auto;display:flex;flex-direction:column;justify-content:flex-end;padding:14px 18px;gap:13px;min-height:0}
+.single-pane{flex:1}
+.trans-pane{flex:2;min-height:0}
+.src-pane{flex:1;min-height:0;background:rgba(0,0,0,.035);border-bottom:1px solid var(--border)}
+.cap{font-size:18px;line-height:1.55;margin:0;color:var(--ink)}
+.stage.big .cap{font-size:21px}
+.src-line{font-size:14px;line-height:1.5;margin:0;color:var(--gray)}
+.cap.dim,.src-line.dim{opacity:.5}
+
+/* home: 역할 토글 */
+.role-seg{display:flex;gap:4px;margin:4px 0 22px;padding:4px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
+.role-seg button{flex:1;border:none;background:transparent;padding:11px 4px;border-radius:9px;font-size:14px;line-height:1.3;font-weight:600;color:var(--gray);cursor:pointer;font-family:var(--font);-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+.role-seg button:focus{outline:none}
+.role-seg button.on{background:var(--teal);color:#fff}
+.role-seg button:disabled{opacity:.4;color:var(--faint);cursor:not-allowed}
+
+/* instructor: 수강생 언어 분포 막대 */
+.bars{display:flex;flex-direction:column;gap:9px;padding:4px 18px 0}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:13px}
+.bar-lbl{width:88px;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:8px;background:#ECEAE3;border-radius:4px;overflow:hidden}
+.bar-fill{display:block;height:100%;background:var(--teal2);border-radius:4px;transition:width .3s ease}
+.bar-cnt{width:24px;text-align:right;color:var(--ink);font-weight:600}
+.ph-desc.small{font-size:12px;padding:0 18px;margin:6px 0}
+.err-bar{flex:none;background:#fdecea;color:var(--live);font-size:13px;padding:8px 16px;border-top:1px solid #f3c9c4}
+
+/* home: 교수자 잠금(자물쇠) + 비밀번호/키 모달 */
+.lock{font-size:19px;padding:2px 4px;line-height:1}
+.lock.on{color:var(--teal2)}
+.modal-backdrop{position:absolute;inset:0;z-index:50;background:rgba(40,38,30,.4);display:flex;align-items:center;justify-content:center;padding:24px}
+.modal-card{width:100%;max-width:320px;background:#fff;border-radius:18px;padding:20px 18px;box-shadow:0 18px 50px rgba(40,38,30,.3)}
+.modal-title{font-size:16px;font-weight:700;margin:0 0 6px}
+.modal-desc{font-size:13px;color:var(--gray);margin:0 0 14px;line-height:1.5}
+.modal-err{font-size:13px;color:var(--live);margin:10px 0 0}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+.modal-actions .ghost{flex:1;height:48px}
+.modal-actions .modal-ok{flex:1;height:48px;margin-top:0}
+
+/* live: 글자 크기 토글(aA) — ⚙ 대체 */
+.gear-btn.fontsize{display:inline-flex;align-items:baseline;gap:1px;line-height:1;color:var(--gray);padding:0 2px 0 8px}
+.gear-btn.fontsize .fa-sm{font-size:12px;font-weight:700}
+.gear-btn.fontsize .fa-lg{font-size:18px;font-weight:700}
+.gear-btn.fontsize.on{color:var(--teal)}
+
+/* instructor: 접속자 현황 화면(기본) */
+.status-stage{overflow-y:auto;justify-content:flex-start;padding:26px 22px;gap:0}
+.status-card{text-align:center;padding:10px 0 4px}
+.status-num{font-size:56px;font-weight:800;color:var(--teal);line-height:1}
+.status-label{font-size:14px;color:var(--gray);margin-top:8px}
+.status-empty{text-align:center;color:var(--gray);font-size:14px;margin-top:34px}
+.status-bars{padding:0;margin-top:22px}
+.status-warn{margin-top:18px}
+.status-hint{text-align:center;color:var(--faint);font-size:13px;margin-top:24px;line-height:1.5}
+
+/* 교수 [학생] 버튼 새 질문 배지 */
+.view-wrap{position:relative;display:inline-flex}
+.qbadge{position:absolute;top:-5px;right:-6px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--live);color:#fff;font-size:10px;font-weight:700;line-height:17px;text-align:center;box-shadow:0 0 0 2px #fff}
+
+/* 교수 '학생 보기' — 현황 요약(위) + 질문 피드(아래, 최신이 아래로 쌓임) */
+.stu-stage{flex-direction:column;gap:10px;padding:12px 14px;overflow:hidden}
+.stu-summary{flex:none;border:1px solid var(--border);border-radius:14px;padding:11px 14px;background:#fff}
+.stu-sum-head{display:flex;align-items:baseline;gap:7px}
+.stu-sum-num{font-size:26px;font-weight:800;color:var(--teal);line-height:1}
+.stu-sum-label{font-size:13px;color:var(--gray)}
+.stu-sum-langs{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.stu-lang-chip{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--panel);color:var(--gray)}
+.stu-lang-chip b{color:var(--teal);font-weight:700}
+.stu-warn{margin:9px 0 0;font-size:12px;color:var(--live);font-weight:600;line-height:1.45}
+.q-feed{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:2px 1px}
+.q-feed::before{content:"";margin-top:auto} /* 적을 땐 아래에 붙고, 많아지면 스크롤 */
+.q-empty{margin:auto;text-align:center;color:var(--faint);font-size:14px;line-height:1.6}
+.q-card{flex:none;border:1px solid var(--border);border-radius:13px;padding:10px 13px;background:#fff}
+.q-trans{margin:0;font-size:16px;font-weight:600;line-height:1.45;color:var(--ink)}
+.q-orig{margin:5px 0 0;font-size:13px;color:var(--gray);line-height:1.4}
+.q-meta{margin:7px 0 0;font-size:11px;color:var(--faint)}
+
+/* 학생 질문 작성 모달 */
+.q-name-in{margin-top:2px}
+.q-text-in{width:100%;margin-top:10px;border:1px solid var(--border);border-radius:12px;padding:11px 14px;font-size:16px;font-family:var(--font);color:var(--ink);background:#fff;resize:vertical;min-height:92px;line-height:1.5}
+.q-text-in:focus{outline:none;border-color:var(--teal2);box-shadow:0 0 0 3px rgba(15,110,86,.12)}
+.q-soon{margin:10px 0 0;color:var(--faint);font-size:12px}
+
+/* 학생: 최근 내 질문(최근 2개) + 전달 상태 */
+.recent-q{flex:none;border-top:1px solid var(--border);background:#fff;padding:8px 16px}
+.recent-q-title{margin:0 0 4px;font-size:11px;font-weight:600;color:var(--faint)}
+.recent-q-row{display:flex;align-items:center;gap:10px;padding:2px 0}
+.recent-q-text{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;color:var(--ink)}
+.recent-q-stat{flex:none;font-size:11px;font-weight:700;color:var(--teal2)}
+.recent-q-stat.nohost{color:var(--live)}

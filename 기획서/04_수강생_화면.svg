@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" viewBox="0 0 700 412" role="img" aria-label="수강생 실시간 화면 구성: 상단바, 실시간 자막 영역, 용어 카드, 하단 액션바의 영역 레이아웃">
+<style>
+text{font-family:-apple-system,"Segoe UI","Noto Sans KR","Apple SD Gothic Neo",sans-serif;}
+.title{font-size:15px;font-weight:600;fill:#2C2C2A;}
+.zone{font-size:14px;font-weight:600;fill:#2C2C2A;}
+.zoneteal{font-size:14px;font-weight:600;fill:#085041;}
+.desc{font-size:12px;fill:#5F5E5A;}
+.samp{font-size:13px;font-weight:500;fill:#2C2C2A;}
+.sampg{font-size:12px;fill:#7A7972;}
+</style>
+<rect x="0" y="0" width="700" height="412" fill="#FFFFFF"/>
+<text class="title" x="24" y="32">그림 4. 수강생 실시간 화면 구성</text>
+
+<rect x="150" y="60" width="400" height="332" rx="14" fill="#FFFFFF" stroke="#D3D1C7" stroke-width="1"/>
+
+<rect x="166" y="76" width="368" height="52" rx="8" fill="#F7F6F1" stroke="#E2E0D8" stroke-width="0.8"/>
+<text class="zone" x="182" y="98">상단바</text>
+<text class="desc" x="182" y="116">강의명 · LIVE · 듣는 언어 선택 · 원문 토글</text>
+
+<rect x="166" y="136" width="368" height="120" rx="8" fill="#F2FBF8" stroke="#9FE1CB" stroke-width="0.9"/>
+<text class="zoneteal" x="182" y="158">실시간 자막</text>
+<text class="desc" x="182" y="176">최신 줄 강조 · 원문 병기 옵션 · 용어 하이라이트</text>
+<text class="sampg" x="182" y="210">원문 · 정(情)은 단순한 애정이 아닙니다</text>
+<text class="samp" x="182" y="234">자막 · '<tspan fill="#085041" font-weight="600">Jeong (情)</tspan>' isn't simple affection.</text>
+
+<rect x="166" y="264" width="368" height="52" rx="8" fill="#F7F6F1" stroke="#E2E0D8" stroke-width="0.8"/>
+<text class="zone" x="182" y="286">용어 카드</text>
+<text class="desc" x="182" y="304">탭한 용어 정의 + 단어장 저장 — 예: 정(情) · jeong</text>
+
+<rect x="166" y="324" width="368" height="52" rx="8" fill="#F7F6F1" stroke="#E2E0D8" stroke-width="0.8"/>
+<text class="zone" x="182" y="346">하단 액션바</text>
+<text class="desc" x="182" y="364">질문하기 · 용어집 · 북마크 · 메모</text>
+</svg>

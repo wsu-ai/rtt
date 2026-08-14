@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" viewBox="0 0 700 392" role="img" aria-label="역할별 메뉴 구성: 수강생 앱과 교수자 앱의 탭 구성을 나란히 비교. 양쪽 모두 실시간 세션 탭이 핵심">
+<style>
+text{font-family:-apple-system,"Segoe UI","Noto Sans KR","Apple SD Gothic Neo",sans-serif;}
+.title{font-size:15px;font-weight:600;fill:#2C2C2A;}
+.hd{font-size:14px;font-weight:600;fill:#2C2C2A;}
+.grh{font-size:14px;font-weight:500;fill:#3B3B38;}
+.grs{font-size:12px;fill:#5F5E5A;}
+.tealh{font-size:14px;font-weight:500;fill:#085041;}
+.teals{font-size:12px;fill:#0F6E56;}
+.cap{font-size:12px;fill:#5F5E5A;}
+</style>
+<rect x="0" y="0" width="700" height="392" fill="#FFFFFF"/>
+<text class="title" x="24" y="32">그림 2. 역할별 메뉴 구성 — 수강생 앱 / 교수자 앱</text>
+
+<text class="hd" x="187" y="62" text-anchor="middle">수강생 앱</text>
+<text class="hd" x="512" y="62" text-anchor="middle">교수자 앱</text>
+
+<rect x="30" y="76" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="46" y="98">홈</text>
+<text class="grs" x="46" y="116">오늘 수업·진행 중 강의·공지</text>
+<rect x="30" y="132" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="46" y="154">내 강의</text>
+<text class="grs" x="46" y="172">수강 목록·시간표·강의 입장</text>
+<rect x="30" y="188" width="315" height="48" rx="9" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1"/>
+<text class="tealh" x="46" y="210">강의 듣기 (실시간) ★</text>
+<text class="teals" x="46" y="228">듣는 언어·자막·용어·질문</text>
+<rect x="30" y="244" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="46" y="266">복습</text>
+<text class="grs" x="46" y="284">다시보기·요약·퀴즈·용어집·노트</text>
+<rect x="30" y="300" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="46" y="322">설정</text>
+<text class="grs" x="46" y="340">기본 언어·알림·프로필</text>
+
+<rect x="355" y="76" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="371" y="98">홈</text>
+<text class="grs" x="371" y="116">다음 수업·강의 시작·공지</text>
+<rect x="355" y="132" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="371" y="154">내 강의</text>
+<text class="grs" x="371" y="172">담당 과목·수강생 명단·자료</text>
+<rect x="355" y="188" width="315" height="48" rx="9" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="1"/>
+<text class="tealh" x="371" y="210">강의 진행 (실시간) ★</text>
+<text class="teals" x="371" y="228">사용 언어·언어 분포·질문·녹화</text>
+<rect x="355" y="244" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="371" y="266">강의 관리</text>
+<text class="grs" x="371" y="284">녹화본 게시·용어집·요약·퀴즈·통계</text>
+<rect x="355" y="300" width="315" height="48" rx="9" fill="#F1EFE8" stroke="#C9C7BD" stroke-width="0.8"/>
+<text class="grh" x="371" y="322">설정</text>
+<text class="grs" x="371" y="340">프로필·알림</text>
+
+<text class="cap" x="350" y="376" text-anchor="middle">★ 두 실시간 탭은 같은 강의 세션의 양면 (수강생 = 듣기 / 교수자 = 진행)</text>
+</svg>
