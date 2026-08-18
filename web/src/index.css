@@ -72,6 +72,15 @@ input:focus,select:focus{outline:none;border-color:var(--teal2);box-shadow:0 0 0
 .placeholder .primary{width:100%}
 .ask.stop{background:#fff;color:var(--live);border:1px solid var(--live)}
 
+/* maintenance: 점검 페이지 — 모바일에서만 줄바꿈 허용, 데스크톱 폭에선 한 줄로 */
+.maint-box{margin:auto;text-align:center;padding:24px}
+.maint-title{font-size:17px;font-weight:600;margin:0 0 10px}
+.maint-desc{font-size:13px;color:var(--gray);line-height:1.6;margin:0}
+@media(min-width:460px){
+  .screen.maint{max-width:560px}
+  .maint-title,.maint-desc{white-space:nowrap}
+}
+
 /* entry: emblem + footer */
 .emblem{display:block;width:170px;max-width:62%;height:auto;margin:6px auto 14px}
 .ui-lang-picker{display:flex;justify-content:center;margin:0 0 12px}
