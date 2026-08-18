@@ -17,7 +17,7 @@ export default function App() {
   const [student, setStudent] = useState<StudentSession | null>(null)
   const [instructor, setInstructor] = useState<InstructorSession | null>(null)
 
-  if (MAINTENANCE_MODE) return <Maintenance />
+  if (MAINTENANCE_MODE) return <div className="app"><Maintenance /></div>
 
   return (
     <div className="app">
