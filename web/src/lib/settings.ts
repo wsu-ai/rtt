@@ -2,7 +2,7 @@
 // (예전 설정 화면의 키 입력/기본 언어는 제거됨)
 
 export const DEFAULT_LANGUAGE = '한국어' // 강의 원문(소스) 언어 — 교수가 말하는 언어
-export const DEFAULT_OUTPUT_LANGUAGE = 'English' // 화면 기본 출력 언어(학생·교수 공통) — 영어로 모이면 세션 1개 + 원문+번역에 원문/번역 둘 다 보임
+export const DEFAULT_OUTPUT_LANGUAGE = '한국어' // 화면 기본 출력 언어(학생·교수 공통)
 
 // 본인 키 우선(localStorage), 없으면 기본 키(env). 본인 키는 이 브라우저에만 저장되고
 // 빌드 번들에 들어가지 않는다(= 남에게 노출 안 됨). env 기본 키는 번들에 포함됨.

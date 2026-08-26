@@ -298,7 +298,7 @@ export function getStoredUiLang(): UiLang {
     const v = localStorage.getItem(UI_LANG_STORE)
     if (v === 'ko' || v === 'en' || v === 'bn' || v === 'zh') return v
   } catch { /* noop */ }
-  return 'ko'
+  return 'en'
 }
 export function setStoredUiLang(lang: UiLang): void {
   try { localStorage.setItem(UI_LANG_STORE, lang) } catch { /* noop */ }
