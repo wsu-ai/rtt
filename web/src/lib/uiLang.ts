@@ -129,7 +129,7 @@ export const UI_DICTS: Record<UiLang, UiDict> = {
     roleStudent: 'Join Lecture',
     roleInstructor: 'Create Lecture',
     roleInstructorLockedTitle: 'Instructor only — unlock with the lock icon in the top right',
-    fieldCode: 'Access Code',
+    fieldCode: 'Lecture Session ID',
     codePlaceholder: 'e.g. 4821',
     fieldPassword: 'Password',
     studentPasswordPlaceholder: 'Lecture password',
