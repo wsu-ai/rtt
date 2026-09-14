@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { DEFAULT_OUTPUT_LANGUAGE, hasApiKey, unlockInstructor, getStoredApiKey, setStoredApiKey, hasStoredApiKey } from '../lib/settings'
-import { LANGUAGES } from '../lib/languages'
 import { UI_LANGUAGES, UI_DICTS, getStoredUiLang, setStoredUiLang, type UiLang } from '../lib/uiLang'
 import { hasSupabase } from '../lib/supabase'
 import { createRoom, verifyRoom } from '../lib/room'
@@ -29,7 +28,7 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
   // 학생
   const [code, setCode] = useState('')
   const [password, setPassword] = useState('')
-  const [language, setLanguage] = useState(DEFAULT_OUTPUT_LANGUAGE)
+  const [language] = useState(DEFAULT_OUTPUT_LANGUAGE) // 출력 언어는 한국어로 고정 — 학생이 바꿀 수 없음
   // 교수
   const [title, setTitle] = useState('')
   const [iCode, setICode] = useState('')
@@ -165,8 +164,8 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
             </label>
             <label className="field">
               <span>{t.fieldOutputLang}</span>
-              <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-                {LANGUAGES.map((l) => <option key={l.code} value={l.label}>{l.label}</option>)}
+              <select value={language} disabled>
+                <option value="한국어">한국어</option>
               </select>
             </label>
             <button className="primary" disabled={!studentValid || busy} onClick={joinStudent}>{busy ? t.joining : t.join}</button>
