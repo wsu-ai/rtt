@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { DEFAULT_OUTPUT_LANGUAGE, hasApiKey, unlockInstructor, getStoredApiKey, setStoredApiKey, hasStoredApiKey } from '../lib/settings'
+import { DEFAULT_OUTPUT_LANGUAGE, hasApiKey, unlockInstructor } from '../lib/settings'
 import { UI_LANGUAGES, UI_DICTS, getStoredUiLang, setStoredUiLang, type UiLang } from '../lib/uiLang'
 import { hasSupabase } from '../lib/supabase'
 import { createRoom, verifyRoom } from '../lib/room'
@@ -71,15 +71,10 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
   const [title, setTitle] = useState('')
   const [iCode, setICode] = useState('')
   const [iPassword, setIPassword] = useState('')
-  // 교수자 잠금
-  const [unlocked, setUnlocked] = useState(false)
+  // 교수자 비밀번호 모달
   const [lockOpen, setLockOpen] = useState(false)
   const [passcode, setPasscode] = useState('')
   const [lockErr, setLockErr] = useState('')
-  // 본인 Gemini 키 입력(교수자 잠금 해제 후 🔑)
-  const [keyOpen, setKeyOpen] = useState(false)
-  const [keyInput, setKeyInput] = useState('')
-  const [keyShow, setKeyShow] = useState(false)
 
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
@@ -97,19 +92,11 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
     onJoinStudent({ code: code.trim(), language, title: r.title ?? '' })
   }
 
-  function toggleLock() {
-    if (unlocked) {
-      setUnlocked(false); setErr('')
-      if (role === 'instructor') setRole('student')
-    } else {
-      setPasscode(''); setLockErr(''); setLockOpen(true)
-    }
-  }
   function submitPasscode() {
     if (!passcode.trim()) { setLockOpen(false); setLockErr(''); return }
     const mode = unlockInstructor(passcode)
     if (!mode) { setLockErr('비밀번호가 올바르지 않습니다.'); return }
-    setUnlocked(true); setLockOpen(false); setPasscode(''); setLockErr(''); setErr('')
+    setLockOpen(false); setPasscode(''); setLockErr(''); setErr('')
     if (mode === 'personal') {
       // 개인 비번 → 방 개설 폼 건너뛰고 바로 개인 모드로 입장(1인용이라 방 불필요)
       const code = Math.floor(1000 + Math.random() * 9000).toString()
@@ -123,9 +110,6 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
   function pickProfessors() { setPasscode(''); setLockErr(''); setLockOpen(true) }
   function pickStudents() { setErr(''); setRole('student'); setStage('form') }
 
-  function openKey() { setKeyInput(getStoredApiKey()); setKeyShow(false); setKeyOpen(true) }
-  function saveKey() { setStoredApiKey(keyInput); setKeyOpen(false) }
-  function resetKey() { setStoredApiKey(''); setKeyInput(''); setKeyOpen(false) }
 
   async function createInstructor() {
     setErr('')
@@ -153,25 +137,6 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
               <path d="M5.5 10v9.5h4.5v-5.5h4v5.5h4.5V10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
             </svg>
           </button>
-        )}
-        {/* 🔑·자물쇠는 랜딩에서만 — 교수(강의 개설)·학생(강의 입장) 화면에서는 숨김 */}
-        {stage === 'landing' && (
-          <>
-            {unlocked && (
-              <button
-                className={'gear lock' + (hasStoredApiKey() ? ' on' : '')}
-                onClick={openKey}
-                aria-label={t.keyBtnAriaMine}
-                title={hasStoredApiKey() ? t.keyBtnTitleMine : t.keyBtnTitleDefault}
-              >🔑</button>
-            )}
-            <button
-              className={'gear lock' + (unlocked ? ' on' : '')}
-              onClick={toggleLock}
-              aria-label={unlocked ? t.lockBtnAriaOn : t.lockBtnAriaOff}
-              title={unlocked ? t.lockBtnTitleOn : t.lockBtnTitleOff}
-            >{unlocked ? '🔓' : '🔒'}</button>
-          </>
         )}
       </header>
 
@@ -266,7 +231,10 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
         </>
         )}
 
-        <div className="home-footer">{t.footer}</div>
+        <div className="home-footer">
+          {t.footer}
+          <div className="home-copyright">© {now.getFullYear()} Woosong University. All Rights Reserved.</div>
+        </div>
       </div>
 
       {lockOpen && (
@@ -284,24 +252,6 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
             <div className="modal-actions">
               <button className="ghost" onClick={() => setLockOpen(false)}>{t.cancel}</button>
               <button className="primary modal-ok" disabled={!passcode.trim()} onClick={submitPasscode}>{t.confirm}</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {keyOpen && (
-        <div className="modal-backdrop" onClick={() => setKeyOpen(false)}>
-          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">{t.keyTitle}</h2>
-            <p className="modal-desc">{t.keyDescPre}<b>{t.keyDescBold}</b>{t.keyDescPost}</p>
-            <div className="key-row">
-              <input type={keyShow ? 'text' : 'password'} value={keyInput} onChange={(e) => setKeyInput(e.target.value)} placeholder={t.keyPlaceholder} autoComplete="off" spellCheck={false} />
-              <button className="ghost" onClick={() => setKeyShow((s) => !s)}>{keyShow ? t.hide : t.show}</button>
-            </div>
-            <p className="modal-desc" style={{ marginTop: 8 }}>{t.keyCurrentPre}<b>{hasStoredApiKey() ? t.keyCurrentMine : t.keyCurrentDefault}</b>{t.keyCurrentPost}</p>
-            <div className="modal-actions">
-              <button className="ghost" onClick={resetKey}>{t.resetDefault}</button>
-              <button className="primary modal-ok" onClick={saveKey}>{t.save}</button>
             </div>
           </div>
         </div>
