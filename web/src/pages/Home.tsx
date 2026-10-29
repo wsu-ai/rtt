@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DEFAULT_OUTPUT_LANGUAGE, hasApiKey, unlockInstructor, getStoredApiKey, setStoredApiKey, hasStoredApiKey } from '../lib/settings'
 import { UI_LANGUAGES, UI_DICTS, getStoredUiLang, setStoredUiLang, type UiLang } from '../lib/uiLang'
 import { hasSupabase } from '../lib/supabase'
@@ -16,6 +16,35 @@ function Emblem() {
   )
 }
 
+// 랜딩 하단 현재 시각·오늘 날짜·요일 — 화면 언어에 맞춘 표기
+const DATE_LOCALES: Record<UiLang, string> = { ko: 'ko-KR', en: 'en-US', bn: 'bn-BD', zh: 'zh-CN' }
+
+// 랜딩(역할 선택) 아이콘 — 강단 앞 교수 / 학사모 쓴 학생
+function ProfessorIcon() {
+  return (
+    <svg className="role-icon" viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="6" y="6" width="34" height="22" rx="2" fill="#F2FBF8" stroke="#085041" strokeWidth="2.5" />
+      <path d="M12 14h18M12 20h12" stroke="#0F6E56" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="46" cy="22" r="7" fill="#0F6E56" />
+      <path d="M33 58v-14a13 13 0 0 1 26 0v14z" fill="#085041" />
+      <path d="M40 34l-8-6" stroke="#085041" strokeWidth="3.5" strokeLinecap="round" />
+      <path d="M22 44h20v14H22z" fill="#9FE1CB" stroke="#085041" strokeWidth="2.5" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function StudentIcon() {
+  return (
+    <svg className="role-icon" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M32 6L6 17l26 11 26-11z" fill="#085041" />
+      <path d="M52 20v12" stroke="#085041" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="52" cy="34" r="2.5" fill="#085041" />
+      <path d="M18 22v6c0 6 6 10 14 10s14-4 14-10v-6l-14 6z" fill="#0F6E56" />
+      <path d="M12 60v-6a12 12 0 0 1 12-12h16a12 12 0 0 1 12 12v6z" fill="#9FE1CB" stroke="#085041" strokeWidth="2.5" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 export default function Home({ onJoinStudent, onCreateInstructor }: {
   onJoinStudent: (s: StudentSession) => void
   onCreateInstructor: (s: InstructorSession) => void
@@ -24,6 +53,15 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
   const t = UI_DICTS[uiLang]
   function changeUiLang(lang: UiLang) { setUiLang(lang); setStoredUiLang(lang) }
 
+  // 랜딩 시계 — 1초마다 갱신(자정 넘으면 날짜·요일도 자동으로 바뀜)
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  // 첫 화면은 역할 선택(교수/학생) — 고른 뒤 입장/개설 폼으로
+  const [stage, setStage] = useState<'landing' | 'form'>('landing')
   const [role, setRole] = useState<'student' | 'instructor'>('student')
   // 학생
   const [code, setCode] = useState('')
@@ -77,18 +115,17 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
       const code = Math.floor(1000 + Math.random() * 9000).toString()
       onCreateInstructor({ code, password: '', title: '개인 통역', mode: 'personal' })
     } else {
-      setRole('instructor') // 강의 비번 → 기본 화면을 '강의 개설'로
+      setRole('instructor'); setStage('form') // 강의 비번 → 기본 화면을 '강의 개설'로
     }
   }
+
+  // 랜딩: 교수 아이콘 = 항상 교수자 비밀번호 입력(이미 잠금 해제여도 다시 확인), 학생 아이콘 = 입장 폼
+  function pickProfessors() { setPasscode(''); setLockErr(''); setLockOpen(true) }
+  function pickStudents() { setErr(''); setRole('student'); setStage('form') }
 
   function openKey() { setKeyInput(getStoredApiKey()); setKeyShow(false); setKeyOpen(true) }
   function saveKey() { setStoredApiKey(keyInput); setKeyOpen(false) }
   function resetKey() { setStoredApiKey(''); setKeyInput(''); setKeyOpen(false) }
-
-  function pickInstructor() {
-    if (!unlocked) return // 잠겨 있으면 버튼 비활성(클릭 무시)
-    setErr(''); setRole('instructor')
-  }
 
   async function createInstructor() {
     setErr('')
@@ -109,20 +146,33 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
   return (
     <div className="screen home">
       <header className="home-top">
-        {unlocked && (
-          <button
-            className={'gear lock' + (hasStoredApiKey() ? ' on' : '')}
-            onClick={openKey}
-            aria-label={t.keyBtnAriaMine}
-            title={hasStoredApiKey() ? t.keyBtnTitleMine : t.keyBtnTitleDefault}
-          >🔑</button>
+        {stage === 'form' && (
+          <button className="home-back" onClick={() => { setStage('landing'); setErr('') }} aria-label={t.home} title={t.home}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 11.5L12 4l9 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M5.5 10v9.5h4.5v-5.5h4v5.5h4.5V10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+            </svg>
+          </button>
         )}
-        <button
-          className={'gear lock' + (unlocked ? ' on' : '')}
-          onClick={toggleLock}
-          aria-label={unlocked ? t.lockBtnAriaOn : t.lockBtnAriaOff}
-          title={unlocked ? t.lockBtnTitleOn : t.lockBtnTitleOff}
-        >{unlocked ? '🔓' : '🔒'}</button>
+        {/* 🔑·자물쇠는 랜딩에서만 — 교수(강의 개설)·학생(강의 입장) 화면에서는 숨김 */}
+        {stage === 'landing' && (
+          <>
+            {unlocked && (
+              <button
+                className={'gear lock' + (hasStoredApiKey() ? ' on' : '')}
+                onClick={openKey}
+                aria-label={t.keyBtnAriaMine}
+                title={hasStoredApiKey() ? t.keyBtnTitleMine : t.keyBtnTitleDefault}
+              >🔑</button>
+            )}
+            <button
+              className={'gear lock' + (unlocked ? ' on' : '')}
+              onClick={toggleLock}
+              aria-label={unlocked ? t.lockBtnAriaOn : t.lockBtnAriaOff}
+              title={unlocked ? t.lockBtnTitleOn : t.lockBtnTitleOff}
+            >{unlocked ? '🔓' : '🔒'}</button>
+          </>
+        )}
       </header>
 
       <div className="home-body">
@@ -138,19 +188,37 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
           </select>
         </div>
         <h1 className="brand">My Translation Buddy</h1>
+
+        {stage === 'landing' ? (
+          <>
+            <p className="brand-sub landing-sub">{t.landingPrompt}</p>
+            <div className="role-cards">
+              <button className="role-card" onClick={pickProfessors}>
+                <ProfessorIcon />
+                <span>{t.landingProfessors}</span>
+              </button>
+              <button className="role-card" onClick={pickStudents}>
+                <StudentIcon />
+                <span>{t.landingStudents}</span>
+              </button>
+            </div>
+            <p className="landing-time">
+              {now.toLocaleTimeString(DATE_LOCALES[uiLang], { hour: 'numeric', minute: '2-digit' })}
+            </p>
+            <p className="landing-date">
+              {now.toLocaleDateString(DATE_LOCALES[uiLang], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          </>
+        ) : (
+        <>
         <p className="brand-sub">
           {role === 'student' ? t.subStudent : t.subInstructor}
         </p>
 
-        <div className="role-seg">
-          <button className={role === 'student' ? 'on' : ''} onClick={() => { setRole('student'); setErr('') }}>{t.roleStudent}</button>
-          <button
-            className={role === 'instructor' ? 'on' : ''}
-            disabled={!unlocked}
-            onClick={pickInstructor}
-            title={unlocked ? '' : t.roleInstructorLockedTitle}
-          >{t.roleInstructor}{!unlocked && ' 🔒'}</button>
-        </div>
+        {/* 역할 토글 대신 제목 텍스트만 — 교수는 '강의 개설'(파랑), 학생은 '강의 입장'(초록) */}
+        <h2 className={'role-title' + (role === 'student' ? ' student' : '')}>
+          {role === 'instructor' ? t.roleInstructor : t.roleStudent}
+        </h2>
 
         {role === 'student' ? (
           <>
@@ -194,6 +262,8 @@ export default function Home({ onJoinStudent, onCreateInstructor }: {
         )}
         {!sbReady && (
           <p className="hint">{t.hintNoSupabasePre}<code>.env.local</code>{t.hintNoSupabasePost}</p>
+        )}
+        </>
         )}
 
         <div className="home-footer">{t.footer}</div>

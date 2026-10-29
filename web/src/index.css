@@ -124,12 +124,24 @@ input:focus,select:focus{outline:none;border-color:var(--teal2);box-shadow:0 0 0
 .src-line{font-size:14px;line-height:1.5;margin:0;color:var(--gray)}
 .cap.dim,.src-line.dim{opacity:.5}
 
-/* home: 역할 토글 */
-.role-seg{display:flex;gap:4px;margin:4px 0 22px;padding:4px;border:1px solid var(--border);border-radius:12px;background:var(--panel)}
-.role-seg button{flex:1;border:none;background:transparent;padding:11px 4px;border-radius:9px;font-size:14px;line-height:1.3;font-weight:600;color:var(--gray);cursor:pointer;font-family:var(--font);-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
-.role-seg button:focus{outline:none}
-.role-seg button.on{background:var(--teal);color:#fff}
-.role-seg button:disabled{opacity:.4;color:var(--faint);cursor:not-allowed}
+/* home: 역할 제목(교수=파랑, 학생=초록) */
+
+.role-title{margin:4px 0 22px;padding:11px 4px;border-radius:12px;background:#1C5FA8;font-size:16px;font-weight:700;color:#fff;text-align:center}
+.role-title.student{background:var(--teal)}
+
+/* home: 랜딩 역할 선택 카드(교수/학생) */
+.home-back{margin-right:auto;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:none;background:none;color:var(--gray);cursor:pointer}
+.home-back svg{width:26px;height:26px}
+.home-back:hover{color:var(--teal)}
+.landing-time{margin:16px 0 0;text-align:center;font-size:30px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.landing-date{margin:4px 0 0;text-align:center;font-size:15px;font-weight:500;color:var(--gray)}
+.landing-sub{text-align:center}
+.role-cards{display:flex;gap:14px;margin:4px 0 8px}
+.role-card{flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;padding:22px 8px 18px;border:1px solid var(--border);border-radius:18px;background:#fff;cursor:pointer;font-family:var(--font);font-size:16px;font-weight:600;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .15s}
+.role-card:hover{border-color:var(--tealb);box-shadow:0 6px 18px rgba(8,80,65,.12)}
+.role-card:active{transform:scale(.97)}
+.role-card:focus-visible{outline:none;border-color:var(--teal2);box-shadow:0 0 0 3px rgba(15,110,86,.18)}
+.role-icon{width:72px;height:72px}
 
 /* instructor: 수강생 언어 분포 막대 */
 .bars{display:flex;flex-direction:column;gap:9px;padding:4px 18px 0}

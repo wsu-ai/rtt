@@ -63,6 +63,10 @@ export type UiDict = {
   lockBtnAriaOff: string
   lockBtnTitleOn: string
   lockBtnTitleOff: string
+  landingPrompt: string
+  landingProfessors: string
+  landingStudents: string
+  home: string
 }
 
 export const UI_DICTS: Record<UiLang, UiDict> = {
@@ -121,6 +125,10 @@ export const UI_DICTS: Record<UiLang, UiDict> = {
     lockBtnAriaOff: '교수자 비밀번호 입력',
     lockBtnTitleOn: '교수자 모드 켜짐 — 누르면 잠금',
     lockBtnTitleOff: '교수자 비밀번호',
+    landingPrompt: '역할을 선택하세요.',
+    landingProfessors: '교수',
+    landingStudents: '학생',
+    home: '홈',
   },
   en: {
     languageSelectLabel: 'Display Language',
@@ -177,6 +185,10 @@ export const UI_DICTS: Record<UiLang, UiDict> = {
     lockBtnAriaOff: 'Enter instructor password',
     lockBtnTitleOn: 'Instructor mode on — click to lock',
     lockBtnTitleOff: 'Instructor password',
+    landingPrompt: 'Please select your role.',
+    landingProfessors: 'Professors',
+    landingStudents: 'Students',
+    home: 'Home',
   },
   bn: {
     languageSelectLabel: 'পর্দার ভাষা',
@@ -233,6 +245,10 @@ export const UI_DICTS: Record<UiLang, UiDict> = {
     lockBtnAriaOff: 'শিক্ষকের পাসওয়ার্ড লিখুন',
     lockBtnTitleOn: 'শিক্ষক মোড চালু — লক করতে চাপুন',
     lockBtnTitleOff: 'শিক্ষকের পাসওয়ার্ড',
+    landingPrompt: 'আপনার ভূমিকা নির্বাচন করুন।',
+    landingProfessors: 'অধ্যাপক',
+    landingStudents: 'শিক্ষার্থী',
+    home: 'হোম',
   },
   zh: {
     languageSelectLabel: '显示语言',
@@ -289,6 +305,10 @@ export const UI_DICTS: Record<UiLang, UiDict> = {
     lockBtnAriaOff: '输入教师密码',
     lockBtnTitleOn: '教师模式已开启 — 点击锁定',
     lockBtnTitleOff: '教师密码',
+    landingPrompt: '请选择您的身份。',
+    landingProfessors: '教授',
+    landingStudents: '学生',
+    home: '首页',
   },
 }
 
