@@ -3,6 +3,8 @@
 
 export const DEFAULT_LANGUAGE = '한국어' // 강의 원문(소스) 언어 — 교수가 말하는 언어
 export const DEFAULT_OUTPUT_LANGUAGE = '한국어' // 화면 기본 출력 언어(학생·교수 공통)
+// 학생이 고를 수 있는 출력 언어(languages.ts 라벨) — 한국어 + 중국어(간체)
+export const OUTPUT_LANGUAGES = ['한국어', '中文（简体）']
 
 // 본인 키 우선(localStorage), 없으면 기본 키(env). 본인 키는 이 브라우저에만 저장되고
 // 빌드 번들에 들어가지 않는다(= 남에게 노출 안 됨). env 기본 키는 번들에 포함됨.

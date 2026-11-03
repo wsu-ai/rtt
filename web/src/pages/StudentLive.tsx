@@ -4,12 +4,13 @@ import { codeOf } from '../lib/languages'
 import { joinRoomChannel, SOURCE_LANG, type GuestHandle, type Caption, type Question } from '../lib/room'
 import { startVoiceListen, voiceConfigured, type VoiceListener } from '../lib/voice'
 import { useWakeLock } from '../lib/wakeLock'
+import { OUTPUT_LANGUAGES } from '../lib/settings'
 
 const CAPTION_LABELS = ['번역만', '원문+번역']
 
 export default function StudentLive({ session, onLeave }: { session: StudentSession; onLeave: () => void }) {
   useWakeLock() // 강의 보는 동안 화면 꺼짐 방지
-  const [language] = useState(session.language) // 한국어로 고정 — 학생이 바꿀 수 없음
+  const [language, setLanguage] = useState(session.language) // 출력 언어: 한국어/중국어 중 선택
   const [captionMode, setCaptionMode] = useState(1) // 1 원문+번역(기본) · 0 번역만
   const [big, setBig] = useState(false)
   const [toast, setToast] = useState('')
@@ -56,6 +57,14 @@ export default function StudentLive({ session, onLeave }: { session: StudentSess
     if (srcRef.current) srcRef.current.scrollTop = srcRef.current.scrollHeight
     if (transRef.current) transRef.current.scrollTop = transRef.current.scrollHeight
   }, [srcFinals, srcInterim, transFinals, transInterim, captionMode])
+
+  function changeLanguage(newLang: string) {
+    setLanguage(newLang)
+    langRef.current = codeOf(newLang)
+    transFinalsRef.current = []; setTransFinals([]); setTransInterim('') // 새 언어 → 번역 누적 초기화
+    guestRef.current?.setLang(langRef.current)
+    voiceRef.current?.setLang(langRef.current) // 음성 켜져 있으면 새 언어 트랙으로 재구독
+  }
 
   function leave() { voiceRef.current?.stop(); voiceRef.current = null; guestRef.current?.close(); guestRef.current = null; onLeave() }
   function flash(m: string) { setToast(m); setTimeout(() => setToast(''), 1500) }
@@ -122,8 +131,8 @@ export default function StudentLive({ session, onLeave }: { session: StudentSess
           </button>
         </div>
         <div className="ctrls">
-          <select className="lang-select" value={language} disabled>
-            <option value="한국어">한국어</option>
+          <select className="lang-select" value={language} onChange={(e) => changeLanguage(e.target.value)}>
+            {OUTPUT_LANGUAGES.map((l) => <option key={l} value={l}>{l}</option>)}
           </select>
           <button className="chip on cap-toggle" onClick={() => setCaptionMode((m) => (m + 1) % 2)}>{CAPTION_LABELS[captionMode]}</button>
           <button className={'chip' + (voiceOn ? ' on' : '')} onClick={toggleVoice} disabled={voiceBusy} title="번역 음성 듣기 (이어폰 권장)">{voiceBusy ? '연결 중…' : voiceOn ? '🔊 음성' : '🔈 음성'}</button>
