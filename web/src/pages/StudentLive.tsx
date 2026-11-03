@@ -3,10 +3,12 @@ import type { StudentSession } from '../App'
 import { codeOf } from '../lib/languages'
 import { joinRoomChannel, SOURCE_LANG, type GuestHandle, type Caption, type Question } from '../lib/room'
 import { startVoiceListen, voiceConfigured, type VoiceListener } from '../lib/voice'
+import { useWakeLock } from '../lib/wakeLock'
 
 const CAPTION_LABELS = ['번역만', '원문+번역']
 
 export default function StudentLive({ session, onLeave }: { session: StudentSession; onLeave: () => void }) {
+  useWakeLock() // 강의 보는 동안 화면 꺼짐 방지
   const [language] = useState(session.language) // 한국어로 고정 — 학생이 바꿀 수 없음
   const [captionMode, setCaptionMode] = useState(1) // 1 원문+번역(기본) · 0 번역만
   const [big, setBig] = useState(false)

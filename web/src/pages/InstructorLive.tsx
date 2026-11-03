@@ -8,6 +8,7 @@ import { hostRoom, endRoom, touchRoom, endRoomBeacon, SOURCE_LANG, type HostHand
 import { translateText } from '../lib/translateText'
 import { logDebug } from '../lib/debugLog'
 import { startVoicePublish, voiceConfigured, type VoicePublisher } from '../lib/voice'
+import { useWakeLock } from '../lib/wakeLock'
 
 const CAPTION_LABELS = ['번역만', '원문+번역']
 type Mode = 'lecture' | 'personal'
@@ -19,6 +20,7 @@ function labelOf(code: string): string {
 }
 
 export default function InstructorLive({ session, onLeave }: { session: InstructorSession; onLeave: () => void }) {
+  useWakeLock() // 강의 중 화면 꺼짐 방지(꺼지면 마이크·번역이 멈춤)
   const [mode, setMode] = useState<Mode>(session.mode ?? 'lecture')
   const [status, setStatus] = useState<BcStatus | 'idle'>('idle')
   const [micOn, setMicOn] = useState(false)
